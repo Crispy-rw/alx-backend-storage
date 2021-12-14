@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 """
-Insert a document in Python
+Insert a new document in a collection based on kwargs
 """
-import pymongo
-
 
 def insert_school(mongo_collection, **kwargs):
     """
-    insert a documents into a collection
+    Insert a new document in a collection based on kwargs
+    Args:
+        mongo_collection : pymongo collection object
+        kwargs: dict to be added to collection
     """
-    data = mongo_collection.insert_one(kwargs)
-    return data.
+    doc = {}
+    for k, v in kwargs.items():
+        doc[k] = v
+    result = mongo_collection.insert_one(doc)
+    return result.inserted_id
