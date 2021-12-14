@@ -1,26 +1,27 @@
 #!/usr/bin/env python3
 """
-Where can I learn Python?
+script that provides some stats about Nginx logs stored in MongoDB
 """
 from pymongo import MongoClient
 
+
 if __name__ == "__main__":
     client = MongoClient('mongodb://127.0.0.1:27017')
-    nginx_collection = client.logs.nginx
-    number = nginx_collection.count()
-    number_get = nginx_collection.find({"method": "GET"}).count()
-    number_post = nginx_collection.find({"method": "POST"}).count()
-    number_put = nginx_collection.find({"method": "PUT"}).count()
-    number_patch = nginx_collection.find({"method": "PATCH"}).count()
-    number_delete = nginx_collection.find({"method": "DELETE"}).count()
-    number_status = nginx_collection.find(
-        {"method": "GET", "path": "/status"}).count()
-
-    print("{} logs".format(number))
+    nginx_logs = client.logs.nginx
+    # get number of documents in collection
+    docs_num = nginx_logs.count_documents({})
+    get_num = nginx_logs.count_documents({'method': 'GET'})
+    post_num = nginx_logs.count_documents({'method': 'POST'})
+    put_num = nginx_logs.count_documents({'method': 'PUT'})
+    patch_num = nginx_logs.count_documents({'method': 'PATCH'})
+    delete_num = nginx_logs.count_documents({'method': 'DELETE'})
+    get_status = nginx_logs.count_documents({'method': 'GET',
+                                             'path': '/status'})
+    print("{} logs".format(docs_num))
     print("Methods:")
-    print("\tmethod GET: {}".format(number_get))
-    print("\tmethod POST: {}".format(number_post))
-    print("\tmethod PUT: {}".format(number_put))
-    print("\tmethod PATCH: {}".format(number_patch))
-    print("\tmethod DELETE: {}".format(number_delete))
-    print("{} status check".format(number_status))
+    print("\tmethod GET: {}".format(get_num))
+    print("\tmethod POST: {}".format(post_num))
+    print("\tmethod PUT: {}".format(put_num))
+    print("\tmethod PATCH: {}".format(patch_num))
+    print("\tmethod DELETE: {}".format(delete_num))
+    print("{} status check".format(get_status))
